@@ -76,14 +76,14 @@ export const useVapi = () => {
                   
                   // Send the jobs back to VAPI
                   vapiInstance.send({
-                    type: 'function-response',
-                    response: {
-                      name: 'findJob',
+                    type: 'add-message',
+                    message: {
+                      role: 'function',
                       content: JSON.stringify(jobs),
                     },
                   });
 
-                  // Return the first job
+                    // Return the first job
                   return jobs[0];
                 }
               } else {
