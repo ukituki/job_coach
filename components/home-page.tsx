@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Mic } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
@@ -8,21 +8,54 @@ import { Card, CardContent } from "@/components/ui/card"
 import { languages, Language } from '@/lib/language-data'
 import { useVapi } from '@/hooks/use-vapi'
 
+const getAssistantId = (langCode: string) => {
+  switch (langCode) {
+    case 'en':
+      return process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID_ENG
+    case 'es':
+      return process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID_ESP
+    case 'uk':
+      return process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID_UKR
+    case 'ru':
+      return process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID_RUS
+    case 'pl':
+      return process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID_POL
+    default:
+      return process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID_ENG
+  }
+}
+
 export function HomePageComponent() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(languages[0])
-  const { isSessionActive, toggleCall, conversation } = useVapi()
+  const { isSessionActive, toggleCall, conversation, initializeVapi, currentAssistantId } = useVapi()
+
+  const handleLanguageChange = useCallback((lang: Language) => {
+    console.log('Language changed:', lang.code)
+    setSelectedLanguage(lang)
+    const newAssistantId = getAssistantId(lang.code)
+    if (newAssistantId) {
+      initializeVapi(newAssistantId)
+    } else {
+      console.error(`No assistant ID found for language: ${lang.code}`)
+    }
+  }, [initializeVapi])
 
   useEffect(() => {
     console.log('HomePageComponent mounted')
-  }, [])
-
-  const handleLanguageChange = (lang: Language) => {
-    console.log('Language changed:', lang.code)
-    setSelectedLanguage(lang)
-  }
+    const initialAssistantId = getAssistantId(selectedLanguage.code)
+    if (initialAssistantId) {
+      initializeVapi(initialAssistantId)
+    } else {
+      console.error(`No assistant ID found for language: ${selectedLanguage.code}`)
+    }
+  }, [initializeVapi, selectedLanguage.code])
 
   const handleMicClick = async () => {
     console.log('Mic button clicked')
+    if (!currentAssistantId) {
+      console.error("No assistant ID set. Cannot start call.");
+      return;
+    }
     try {
       await toggleCall()
       console.log('VAPI call toggled, new state:', isSessionActive ? 'active' : 'inactive')
