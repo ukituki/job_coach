@@ -60,7 +60,7 @@ export function HomePageComponent() {
       await toggleCall()
       console.log('VAPI call toggled, new state:', isSessionActive ? 'active' : 'inactive')
     } catch (error) {
-      console.error('Error toggling VAPI call:', error)
+      console.error('Error toggling VAPI call')
     }
   }
 

@@ -16,8 +16,6 @@ export const useVapi = () => {
 
   const initializeVapi = useCallback((assistantId: string) => {
     console.log("Initializing VAPI...");
-    console.log("Public Key:", publicKey);
-    console.log("Assistant ID:", assistantId);
 
     if (vapiRef.current) {
       vapiRef.current.stop();
@@ -105,7 +103,7 @@ export const useVapi = () => {
 
       console.log("VAPI initialized successfully");
     } catch (error) {
-      console.error("Error initializing VAPI:", error);
+      console.error("Error initializing VAPI");
     }
   }, []);
 
