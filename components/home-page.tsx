@@ -1,17 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, Mic } from 'lucide-react'
+import { Mic } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { languages, Language } from '@/lib/language-data'
 import { useVapi } from '@/hooks/use-vapi'
 
 export function HomePageComponent() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(languages[0])
-  const { isSessionActive, toggleCall, conversation, sendMessage } = useVapi()
+  const { isSessionActive, toggleCall, conversation } = useVapi()
 
   useEffect(() => {
     console.log('HomePageComponent mounted')
@@ -30,12 +29,6 @@ export function HomePageComponent() {
     } catch (error) {
       console.error('Error toggling VAPI call:', error)
     }
-  }
-
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    console.log('Search form submitted')
-    // Add your search logic here
   }
 
   const getOpportunityText = (lang: Language) => {
@@ -64,19 +57,7 @@ export function HomePageComponent() {
     <div className="flex flex-col min-h-screen bg-background">
       <header className="flex justify-between items-center p-4 border-b">
         <Link href="/" className="text-2xl font-bold">MigrantJobs</Link>
-        <nav className="flex items-center space-x-2">
-          <Button variant="ghost" asChild>
-            <Link href="/browse-jobs">Browse Jobs</Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/chat">Chat</Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/test-vapi">Test Vapi</Link>
-          </Button>
-          <Button variant="ghost">Sign In</Button>
-          <Button>Post a Job</Button>
-        </nav>
+        {/* Navbar links removed */}
       </header>
 
       <main className="flex-grow flex flex-col items-center justify-center p-8">
@@ -98,15 +79,7 @@ export function HomePageComponent() {
 
         <h1 className="text-4xl font-bold mb-8">{getOpportunityText(selectedLanguage)}</h1>
         
-        <Card className="w-full max-w-2xl mb-8">
-          <CardContent className="p-4">
-            <form onSubmit={handleSearch} className="flex gap-2">
-              <Input placeholder="Job title or keyword" className="flex-grow" />
-              <Input placeholder="Location" className="flex-grow" />
-              <Button type="submit" size="icon"><Search className="h-4 w-4" /></Button>
-            </form>
-          </CardContent>
-        </Card>
+        {/* Job search component removed */}
 
         <div className="text-2xl font-semibold mb-4">
           {selectedLanguage.greeting}, job seeker!
