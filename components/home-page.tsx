@@ -27,7 +27,7 @@ const getAssistantId = (langCode: string) => {
 
 export function HomePageComponent() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(languages[0])
-  const { isSessionActive, toggleCall, conversation, initializeVapi, currentAssistantId } = useVapi()
+  const { isSessionActive, toggleCall, conversation, initializeVapi, currentAssistantId, sendMessage } = useVapi()
 
   const handleLanguageChange = useCallback((lang: Language) => {
     console.log('Language changed:', lang.code)
@@ -69,7 +69,7 @@ export function HomePageComponent() {
       case 'en': return "Discover Your Global Career Path"
       case 'es': return "Descubre Tu Camino Profesional Global"
       case 'uk': return "Відкрийте Свій Глобальний Кар'єрний Шлях"
-      case 'ru': return "Откройте Свой Глобальный Карьерный Путь"
+      case 'ru': return "Отк��йте Свой Глобальный Карьерный Путь"
       case 'pl': return "Odkryj Swoją Globalną Ścieżkę Kariery"
       default: return "Discover Your Global Career Path"
     }
@@ -86,10 +86,23 @@ export function HomePageComponent() {
     }
   }
 
+  const suggestedTopics = {
+    en: ["🌍 How to find a job abroad?", "📜 What are the visa requirements?", "🗣️ How to prepare for an interview?", "🌟 What are the best countries for my profession?"],
+    es: ["🌍 ¿Cómo encontrar trabajo en el extranjero?", "📜 ¿Cuáles son los requisitos de visa?", "🗣️ ¿Cómo prepararse para una entrevista?", "🌟 ¿Cuáles son los mejores países para mi profesión?"],
+    uk: ["🌍 Як знайти роботу за кордоном?", "📜 Які вимоги до візи?", "🗣️ Як підготуватися до співбесіди?", "🌟 Які найкращі країни для моєї професії?"],
+    ru: ["🌍 Как найти работу за границей?", "📜 Каковы требования к визе?", "🗣️ Как подготовиться к собеседованию?", "🌟 Какие лучшие страны для моей профессии?"],
+    pl: ["🌍 Jak znaleźć pracę za granicą?", "📜 Jakie są wymagania wizowe?", "🗣️ Jak przygotować się do rozmowy kwalifikacyjnej?", "🌟 Jakie są najlepsze kraje dla mojego zawodu?"]
+  };
+
+  const handleSuggestedTopicClick = (topic: string) => {
+    console.log('Suggested topic clicked:', topic);
+    sendMessage('user', topic); // Send the topic to Vapi assistant
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-gray-100"> {/* Lighter background */}
       <header className="flex justify-between items-center p-4 border-b">
-        <Link href="/" className="text-2xl font-bold">MigrantJobs</Link>
+        <Link href="/" className="text-3xl font-bold">MigrantJobs</Link> {/* Enlarged text */}
         {/* Navbar links removed */}
       </header>
 
@@ -99,7 +112,7 @@ export function HomePageComponent() {
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang)}
-              className={`text-4xl p-2 rounded-lg transition-all ${
+              className={`text-5xl p-2 rounded-lg transition-all ${ // Enlarged icons
                 selectedLanguage.code === lang.code
                   ? 'bg-primary text-primary-foreground scale-110'
                   : 'bg-muted hover:bg-muted/80'
@@ -110,11 +123,11 @@ export function HomePageComponent() {
           ))}
         </div>
 
-        <h1 className="text-4xl font-bold mb-8">{getOpportunityText(selectedLanguage)}</h1>
+        <h1 className="text-5xl font-bold mb-8">{getOpportunityText(selectedLanguage)}</h1> {/* Enlarged text */}
         
         {/* Job search component removed */}
 
-        <div className="text-2xl font-semibold mb-4">
+        <div className="text-3xl font-semibold mb-4"> {/* Enlarged text */}
           {selectedLanguage.greeting}, job seeker!
         </div>
 
@@ -124,23 +137,42 @@ export function HomePageComponent() {
           onClick={handleMicClick}
           variant={isSessionActive ? "destructive" : "default"}
         >
-          <Mic className="h-5 w-5 mr-2" />
+          <Mic className="h-6 w-6 mr-2" /> {/* Enlarged icon */}
           {isSessionActive ? "Stop Voice Search" : getVoiceSearchText(selectedLanguage)}
         </Button>
 
         {isSessionActive && (
-          <Card className="w-full max-w-2xl mb-8">
-            <CardContent>
-              <h3 className="text-lg font-semibold mb-2">Conversation</h3>
-              <ul className="list-disc pl-5">
-                {conversation.map((msg, index) => (
-                  <li key={index} className={`mb-2 ${msg.role === 'assistant' ? 'text-blue-600' : 'text-green-600'}`}>
-                    <strong>{msg.role}:</strong> {msg.text}
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+          <>
+            <Card className="w-full max-w-3xl mb-8"> {/* Slightly wider card */}
+              <CardContent>
+                <h3 className="text-xl font-semibold mb-2">Suggested Topics</h3> {/* Enlarged text */}
+                <div className="flex flex-wrap gap-2">
+                  {suggestedTopics[selectedLanguage.code].map((topic, index) => (
+                    <Button
+                      key={index}
+                      onClick={() => handleSuggestedTopicClick(topic)}
+                      className="border border-gray-300 text-gray-700 hover:bg-gray-100 transition-all"
+                    >
+                      {topic}
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="w-full max-w-3xl mb-8"> {/* Slightly wider card */}
+              <CardContent>
+                <h3 className="text-xl font-semibold mb-2">Conversation</h3> {/* Enlarged text */}
+                <ul className="list-disc pl-5">
+                  {conversation.map((msg, index) => (
+                    <li key={index} className={`mb-2 ${msg.role === 'assistant' ? 'text-blue-600' : 'text-green-600'}`}>
+                      <strong>{msg.role}:</strong> {msg.text}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </>
         )}
       </main>
 
