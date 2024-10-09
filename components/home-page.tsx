@@ -67,47 +67,47 @@ const followUpQuestions = {
 };
 
 export function HomePageComponent() {
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>(languages[0])
-  const [currentTopics, setCurrentTopics] = useState(initialSuggestedTopics[selectedLanguage.code]);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(languages[0]);
+  const [currentTopics, setCurrentTopics] = useState<string[]>(initialSuggestedTopics[selectedLanguage.code as keyof typeof initialSuggestedTopics]);
   const [selectedMainTopic, setSelectedMainTopic] = useState<string | null>(null);
-  const { isSessionActive, toggleCall, conversation, initializeVapi, currentAssistantId, sendMessage } = useVapi()
+  const { isSessionActive, toggleCall, conversation, initializeVapi, currentAssistantId, sendMessage } = useVapi();
 
   const handleLanguageChange = useCallback((lang: Language) => {
-    console.log('Language changed:', lang.code)
-    setSelectedLanguage(lang)
-    setCurrentTopics(initialSuggestedTopics[lang.code]);
+    console.log('Language changed:', lang.code);
+    setSelectedLanguage(lang);
+    setCurrentTopics(initialSuggestedTopics[lang.code as keyof typeof initialSuggestedTopics]);
     setSelectedMainTopic(null);
-    const newAssistantId = getAssistantId(lang.code)
+    const newAssistantId = getAssistantId(lang.code);
     if (newAssistantId) {
-      initializeVapi(newAssistantId)
+      initializeVapi(newAssistantId);
     } else {
-      console.error(`No assistant ID found for language: ${lang.code}`)
+      console.error(`No assistant ID found for language: ${lang.code}`);
     }
-  }, [initializeVapi])
+  }, [initializeVapi]);
 
   useEffect(() => {
-    console.log('HomePageComponent mounted')
-    const initialAssistantId = getAssistantId(selectedLanguage.code)
+    console.log('HomePageComponent mounted');
+    const initialAssistantId = getAssistantId(selectedLanguage.code);
     if (initialAssistantId) {
-      initializeVapi(initialAssistantId)
+      initializeVapi(initialAssistantId);
     } else {
-      console.error(`No assistant ID found for language: ${selectedLanguage.code}`)
+      console.error(`No assistant ID found for language: ${selectedLanguage.code}`);
     }
-  }, [initializeVapi, selectedLanguage.code])
+  }, [initializeVapi, selectedLanguage.code]);
 
   const handleMicClick = async () => {
-    console.log('Mic button clicked')
+    console.log('Mic button clicked');
     if (!currentAssistantId) {
       console.error("No assistant ID set. Cannot start call.");
       return;
     }
     try {
-      await toggleCall()
-      console.log('VAPI call toggled, new state:', isSessionActive ? 'active' : 'inactive')
+      await toggleCall();
+      console.log('VAPI call toggled, new state:', isSessionActive ? 'active' : 'inactive');
     } catch (error) {
-      console.error('Error toggling VAPI call')
+      console.error('Error toggling VAPI call');
     }
-  }
+  };
 
   const handleSuggestedTopicClick = (topic: string) => {
     console.log('Suggested topic clicked:', topic);
@@ -131,7 +131,7 @@ export function HomePageComponent() {
       case 'en': return "Start Voice Search"
       case 'es': return "Iniciar Búsqueda por Voz"
       case 'uk': return "Почати Голосовий Пошук"
-      case 'ru': return "Начать Голосовой Поиск"
+      case 'ru': return "Начть Голосовой Поиск"
       case 'pl': return "Rozpocznij Wyszukiwanie Głosowe"
       default: return "Start Voice Search"
     }
@@ -185,7 +185,7 @@ export function HomePageComponent() {
               <CardContent>
                 <h3 className="text-xl font-semibold mb-2">Suggested Topics</h3> {/* Enlarged text */}
                 <div className="flex flex-wrap gap-2">
-                  {initialSuggestedTopics[selectedLanguage.code].map((topic, index) => (
+                  {initialSuggestedTopics[selectedLanguage.code as keyof typeof initialSuggestedTopics].map((topic, index) => (
                     <Button
                       key={index}
                       onClick={() => handleSuggestedTopicClick(topic)}
@@ -201,7 +201,7 @@ export function HomePageComponent() {
                   <div className="mt-4">
                     <h4 className="text-lg font-semibold mb-2">Follow-Up Questions</h4>
                     <div className="flex flex-wrap gap-2">
-                      {(followUpQuestions[selectedLanguage.code][selectedMainTopic] || []).map((followUp, index) => (
+                      {(followUpQuestions[selectedLanguage.code as keyof typeof followUpQuestions][selectedMainTopic] || []).map((followUp, index) => (
                         <Button
                           key={index}
                           onClick={() => sendMessage('user', followUp)}
