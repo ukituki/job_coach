@@ -25,7 +25,9 @@ const getAssistantId = (langCode: string) => {
   }
 }
 
-const initialSuggestedTopics = {
+type TopicKey = "🌍 How to find a job abroad?" | "📜 What are the visa requirements?" | "🗣️ How to prepare for an interview?" | "🌟 What are the best countries for my profession?";
+
+const initialSuggestedTopics: Record<string, TopicKey[]> = {
   en: ["🌍 How to find a job abroad?", "📜 What are the visa requirements?", "🗣️ How to prepare for an interview?", "🌟 What are the best countries for my profession?"],
   es: ["🌍 ¿Cómo encontrar trabajo en el extranjero?", "📜 ¿Cuáles son los requisitos de visa?", "🗣️ ¿Cómo prepararse para una entrevista?", "🌟 ¿Cuáles son los mejores países para mi profesión?"],
   uk: ["🌍 Як знайти роботу за кордоном?", "📜 Які вимоги до візи?", "🗣️ Як підготуватися до співбесіди?", "🌟 Які найкращі країни для моєї професії?"],
@@ -33,7 +35,7 @@ const initialSuggestedTopics = {
   pl: ["🌍 Jak znaleźć pracę za granicą?", "📜 Jakie są wymagania wizowe?", "🗣️ Jak przygotować się do rozmowy kwalifikacyjnej?", "🌟 Jakie są najlepsze kraje dla mojego zawodu?"]
 };
 
-const followUpQuestions = {
+const followUpQuestions: Record<string, Record<TopicKey, string[]>> = {
   en: {
     "🌍 How to find a job abroad?": ["What are the top job search websites?", "How to network effectively?", "What are the common interview questions?", "How to balance work and life abroad?"],
     "📜 What are the visa requirements?": ["What documents are needed for a visa?", "How long does the visa process take?", "What are the costs involved?", "How to find accommodation abroad?"],
@@ -68,8 +70,8 @@ const followUpQuestions = {
 
 export function HomePageComponent() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(languages[0]);
-  const [currentTopics, setCurrentTopics] = useState<string[]>(initialSuggestedTopics[selectedLanguage.code as keyof typeof initialSuggestedTopics]);
-  const [selectedMainTopic, setSelectedMainTopic] = useState<string | null>(null);
+  const [currentTopics, setCurrentTopics] = useState<TopicKey[]>(initialSuggestedTopics[selectedLanguage.code as keyof typeof initialSuggestedTopics]);
+  const [selectedMainTopic, setSelectedMainTopic] = useState<TopicKey | null>(null);
   const { isSessionActive, toggleCall, conversation, initializeVapi, currentAssistantId, sendMessage } = useVapi();
 
   const handleLanguageChange = useCallback((lang: Language) => {
@@ -109,7 +111,7 @@ export function HomePageComponent() {
     }
   };
 
-  const handleSuggestedTopicClick = (topic: string) => {
+  const handleSuggestedTopicClick = (topic: TopicKey) => {
     console.log('Suggested topic clicked:', topic);
     sendMessage('user', topic); // Send the topic to Vapi assistant
     setSelectedMainTopic(topic);
@@ -201,7 +203,7 @@ export function HomePageComponent() {
                   <div className="mt-4">
                     <h4 className="text-lg font-semibold mb-2">Follow-Up Questions</h4>
                     <div className="flex flex-wrap gap-2">
-                      {(followUpQuestions[selectedLanguage.code as keyof typeof followUpQuestions][selectedMainTopic as keyof typeof followUpQuestions['en']] || []).map((followUp, index) => (
+                      {(followUpQuestions[selectedLanguage.code as keyof typeof followUpQuestions][selectedMainTopic] || []).map((followUp, index) => (
                         <Button
                           key={index}
                           onClick={() => sendMessage('user', followUp)}
