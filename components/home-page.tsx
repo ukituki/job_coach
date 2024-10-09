@@ -131,7 +131,7 @@ export function HomePageComponent() {
       case 'en': return "Start Voice Search"
       case 'es': return "Iniciar Búsqueda por Voz"
       case 'uk': return "Почати Голосовий Пошук"
-      case 'ru': return "Начть Голосовой Поиск"
+      case 'ru': return "Начать Голосовой Поиск"
       case 'pl': return "Rozpocznij Wyszukiwanie Głosowe"
       default: return "Start Voice Search"
     }
@@ -201,7 +201,7 @@ export function HomePageComponent() {
                   <div className="mt-4">
                     <h4 className="text-lg font-semibold mb-2">Follow-Up Questions</h4>
                     <div className="flex flex-wrap gap-2">
-                      {(followUpQuestions[selectedLanguage.code as keyof typeof followUpQuestions][selectedMainTopic] || []).map((followUp, index) => (
+                      {(followUpQuestions[selectedLanguage.code as keyof typeof followUpQuestions][selectedMainTopic as keyof typeof followUpQuestions['en']] || []).map((followUp, index) => (
                         <Button
                           key={index}
                           onClick={() => sendMessage('user', followUp)}
