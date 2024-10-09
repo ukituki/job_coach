@@ -25,7 +25,8 @@ const getAssistantId = (langCode: string) => {
   }
 }
 
-type TopicKey = "🌍 How to find a job abroad?" | "📜 What are the visa requirements?" | "🗣️ How to prepare for an interview?" | "🌟 What are the best countries for my profession?";
+// Use a more flexible type for topics
+type TopicKey = string;
 
 const initialSuggestedTopics: Record<string, TopicKey[]> = {
   en: ["🌍 How to find a job abroad?", "📜 What are the visa requirements?", "🗣️ How to prepare for an interview?", "🌟 What are the best countries for my profession?"],
