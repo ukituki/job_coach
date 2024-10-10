@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Mic } from 'lucide-react'
+import { Mic, Phone, MessageSquare, Briefcase } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -74,6 +74,7 @@ export function HomePageComponent() {
   const [currentTopics, setCurrentTopics] = useState<TopicKey[]>(initialSuggestedTopics[selectedLanguage.code as keyof typeof initialSuggestedTopics]);
   const [selectedMainTopic, setSelectedMainTopic] = useState<TopicKey | null>(null);
   const { isSessionActive, toggleCall, conversation, initializeVapi, currentAssistantId, sendMessage } = useVapi();
+  const [showHowItWorksModal, setShowHowItWorksModal] = useState(true);
 
   const handleLanguageChange = useCallback((lang: Language) => {
     console.log('Language changed:', lang.code);
@@ -140,11 +141,22 @@ export function HomePageComponent() {
     }
   };
 
+  // Add this new function for the tagline
+  const getTagline = (lang: Language) => {
+    switch (lang.code) {
+      case 'en': return "New country, new job, new life. One call away."
+      case 'es': return "Nuevo país, nuevo trabajo, nueva vida. A una llamada de distancia."
+      case 'uk': return "Нова країна, нова робота, нове життя. Лише один дзвінок."
+      case 'ru': return "Новая страна, новая работа, новая жизнь. Всего один звонок."
+      case 'pl': return "Nowy kraj, nowa praca, nowe życie. Jeden telefon wystarczy."
+      default: return "New country, new job, new life. One call away."
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100"> {/* Lighter background */}
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <header className="flex justify-between items-center p-4 border-b">
-        <Link href="/" className="text-3xl font-bold">MigrantJobs</Link> {/* Enlarged text */}
-        {/* Navbar links removed */}
+        <Link href="/" className="text-3xl font-bold">MigrantBot</Link>
       </header>
 
       <main className="flex-grow flex flex-col items-center justify-center p-8">
@@ -153,7 +165,7 @@ export function HomePageComponent() {
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang)}
-              className={`text-5xl p-2 rounded-lg transition-all ${ // Enlarged icons
+              className={`text-5xl p-2 rounded-lg transition-all ${
                 selectedLanguage.code === lang.code
                   ? 'bg-primary text-primary-foreground scale-110'
                   : 'bg-muted hover:bg-muted/80'
@@ -164,11 +176,10 @@ export function HomePageComponent() {
           ))}
         </div>
 
-        <h1 className="text-5xl font-bold mb-8">{getOpportunityText(selectedLanguage)}</h1> {/* Enlarged text */}
+        <h1 className="text-5xl font-bold mb-4">MigrantBot</h1>
+        <p className="text-2xl mb-8 text-center">{getTagline(selectedLanguage)}</p>
         
-        {/* Job search component removed */}
-
-        <div className="text-3xl font-semibold mb-4"> {/* Enlarged text */}
+        <div className="text-3xl font-semibold mb-4">
           {selectedLanguage.greeting}, job seeker!
         </div>
 
@@ -178,15 +189,15 @@ export function HomePageComponent() {
           onClick={handleMicClick}
           variant={isSessionActive ? "destructive" : "default"}
         >
-          <Mic className="h-6 w-6 mr-2" /> {/* Enlarged icon */}
+          <Mic className="h-6 w-6 mr-2" />
           {isSessionActive ? "Stop Voice Search" : getVoiceSearchText(selectedLanguage)}
         </Button>
 
         {isSessionActive && (
           <>
-            <Card className="w-full max-w-3xl mb-8"> {/* Slightly wider card */}
+            <Card className="w-full max-w-3xl mb-8">
               <CardContent>
-                <h3 className="text-xl font-semibold mb-2">Suggested Topics</h3> {/* Enlarged text */}
+                <h3 className="text-xl font-semibold mb-2">Suggested Topics</h3>
                 <div className="flex flex-wrap gap-2">
                   {initialSuggestedTopics[selectedLanguage.code as keyof typeof initialSuggestedTopics].map((topic, index) => (
                     <Button
@@ -219,12 +230,12 @@ export function HomePageComponent() {
               </CardContent>
             </Card>
 
-            <Card className="w-full max-w-3xl mb-8"> {/* Slightly wider card */}
+            <Card className="w-full max-w-3xl mb-8">
               <CardContent>
-                <h3 className="text-xl font-semibold mb-2">Conversation</h3> {/* Enlarged text */}
+                <h3 className="text-xl font-semibold mb-2">Conversation</h3>
                 <ul className="list-disc pl-5">
                   {conversation
-                    .filter((msg) => msg.isFinal) // Only include final messages
+                    .filter((msg) => msg.isFinal)
                     .map((msg, index) => (
                       <li key={index} className={`mb-2 ${msg.role === 'assistant' ? 'text-blue-600' : 'text-green-600'}`}>
                         <strong>{msg.role}:</strong> {msg.text}
@@ -238,8 +249,31 @@ export function HomePageComponent() {
       </main>
 
       <footer className="border-t p-4 text-center text-sm text-muted-foreground">
-        © 2024 MigrantJobs. All rights reserved.
+        © 2024 MigrantBot. All rights reserved.
       </footer>
+
+      {showHowItWorksModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-md">
+            <h2 className="text-xl font-bold mb-4">How MigrantBot Works</h2>
+            <div className="grid gap-4 mb-4">
+              <div className="flex items-center gap-4">
+                <Phone className="h-10 w-10 text-blue-500" />
+                <p>Call anytime or leave your phone number. We'll call you back to save on international costs.</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <MessageSquare className="h-10 w-10 text-green-500" />
+                <p>Have a quick, 2-minute chat with our voice assistant about your skills, where you want to go, and your dream job.</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <Briefcase className="h-10 w-10 text-purple-500" />
+                <p>We'll send job opportunities that fit you perfectly, directly to your phone.</p>
+              </div>
+            </div>
+            <Button onClick={() => setShowHowItWorksModal(false)}>Got it!</Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
