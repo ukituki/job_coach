@@ -259,7 +259,7 @@ export function HomePageComponent() {
             <div className="grid gap-4 mb-4">
               <div className="flex items-center gap-4">
                 <Phone className="h-10 w-10 text-blue-500" />
-                <p>Call anytime or leave your phone number. We'll call you back to save on international costs.</p>
+                <p>Call anytime or leave your phone number. We&apos;ll call you back to save on international costs.</p>
               </div>
               <div className="flex items-center gap-4">
                 <MessageSquare className="h-10 w-10 text-green-500" />
@@ -267,7 +267,7 @@ export function HomePageComponent() {
               </div>
               <div className="flex items-center gap-4">
                 <Briefcase className="h-10 w-10 text-purple-500" />
-                <p>We'll send job opportunities that fit you perfectly, directly to your phone.</p>
+                <p>We&apos;ll send job opportunities that fit you perfectly, directly to your phone.</p>
               </div>
             </div>
             <Button onClick={() => setShowHowItWorksModal(false)}>Got it!</Button>
