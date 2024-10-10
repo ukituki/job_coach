@@ -1,4 +1,32 @@
 const jobs = [
+    {
+  "id": "f77a5e2b-9e36-4d90-80a9-4748fcdc5f4b",
+  "title": "Electrical Technician",
+  "company": "Swiss Power Systems AG",
+  "location": "Zurich, Switzerland",
+  "description": "We are seeking an experienced Electrical Technician to install, maintain, and repair electrical power systems in commercial and residential settings. The ideal candidate will have completed an apprenticeship or vocational training in electrical work and be familiar with Swiss safety regulations.",
+  "salary": "CHF 25.00 - CHF 28.50 per hour",
+  "postedAt": "2024-10-09T14:00:00Z",
+  "startDate": "2024-12-01",
+  "industry": "Electrical Services",
+  "visaAssistance": true,
+  "accommodationSupport": "Relocation assistance provided",
+  "languageRequirement": "Basic German"
+},
+{
+  "id": "dbb1b499-8fc9-4c9f-8be6-eccd3f2d3f2c",
+  "title": "Industrial Electrician",
+  "company": "Deutsche Machinery GmbH",
+  "location": "Frankfurt, Germany",
+  "description": "Join our team as an Industrial Electrician. You will be responsible for maintaining and repairing electrical systems in industrial machinery. A Journeyman Electrician license and experience in factory environments are preferred.",
+  "salary": "€24.00 - €27.50 per hour",
+  "postedAt": "2024-10-08T13:45:00Z",
+  "startDate": "2024-12-10",
+  "industry": "Industrial Manufacturing",
+  "visaAssistance": true,
+  "accommodationSupport": "Housing allowance provided",
+  "languageRequirement": "Basic German"
+  } ,
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
     title: 'Factory Worker',
