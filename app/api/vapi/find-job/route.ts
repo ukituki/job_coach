@@ -5,26 +5,11 @@ const dummyJobs = jobs;
 
 async function findJob({ location, startDate, industry }: { location?: string; startDate?: string; industry?: string }) {
   console.log('Searching for jobs:', { location, startDate, industry });
-  // Filter jobs based on the provided parameters
-  const filteredJobs = dummyJobs.filter(job => 
-    (!location || job.location.toLowerCase().includes(location.toLowerCase())) &&
-    (!startDate || job.startDate <= startDate) &&
-    (!industry || job.industry?.toLowerCase().includes(industry.toLowerCase()))
-  );
   
-  // Shuffle the filtered jobs array
-  const shuffled = [...filteredJobs].sort(() => 0.5 - Math.random());
+  // Always return the first 3 jobs from the dummyJobs array
+  const firstThreeJobs = dummyJobs.slice(0, 3);
   
-  // If we have less than 3 results, add random jobs to make it up to 3
-  while (shuffled.length < 3) {
-    const randomJob = dummyJobs[Math.floor(Math.random() * dummyJobs.length)];
-    if (!shuffled.some(job => job.id === randomJob.id)) {
-      shuffled.push(randomJob);
-    }
-  }
-  
-  // Return exactly 3 results
-  return shuffled.slice(0, 3);
+  return firstThreeJobs;
 }
 
 export async function POST(request: NextRequest) {
